@@ -1,1 +1,33 @@
-
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cmdb-backend
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: cmdb-backend
+  template:
+    metadata:
+      labels:
+        app: cmdb-backend
+    spec:
+      containers:
+        - name: backend
+          image: "{{ .Values.images.backend }}"
+          ports:
+            - containerPort: 8888
+          env:
+            - name: DB_HOST
+              value: "cmdb-postgres-service"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cmdb-backend-service
+spec:
+  type: ClusterIP
+  selector:
+    app: cmdb-backend
+  ports:
+    - port: 8888
