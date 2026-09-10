@@ -44,14 +44,13 @@
         - "{{ install_dir }}/security"
         - "{{ install_dir }}/gitops"
 
-    - name: Download Backend Fat JAR
+    - name: Download Backend Fat JAR securely
       get_url:
         url: "{{ backend_download_url }}"
         dest: "{{ install_dir }}/cmdb-backend/cmdb-app-latest-fat.jar"
         owner: "{{ likpi_user }}"
         group: "{{ likpi_group }}"
         mode: '0644'
-      ignore_errors: yes
 
     - name: Register Likpi Backend as a systemd service
       copy:
