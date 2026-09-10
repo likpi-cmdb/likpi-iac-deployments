@@ -6,6 +6,8 @@
     likpi_user: likpiadm
     likpi_group: likpi
     install_dir: /opt/likpi
+    backend_download_url: "https://github.com/likpi-cmdb/likpi-iac-deployments/releases/download/v1.0.0/cmdb-app-latest-fat.jar"
+    frontend_download_url: "https://github.com/likpi-cmdb/likpi-iac-deployments/releases/download/v1.0.0/cmdb-frontend-build.zip"
 
   tasks:
     - name: Install system dependencies (Java 17, Nginx, PostgreSQL, unzip)
@@ -40,6 +42,16 @@
         - "{{ install_dir }}/cmdb-backend"
         - "{{ install_dir }}/cmdb-frontend/html"
         - "{{ install_dir }}/security"
+        - "{{ install_dir }}/gitops"
+
+    - name: Download Backend Fat JAR
+      get_url:
+        url: "{{ backend_download_url }}"
+        dest: "{{ install_dir }}/cmdb-backend/cmdb-app-latest-fat.jar"
+        owner: "{{ likpi_user }}"
+        group: "{{ likpi_group }}"
+        mode: '0644'
+      ignore_errors: yes
 
     - name: Register Likpi Backend as a systemd service
       copy:
@@ -63,7 +75,7 @@
           WantedBy=multi-user.target
       notify: Restart Likpi Backend
 
-    - name: Ensure services are enabled and started
+    - name: Ensure core services are enabled and started
       systemd:
         name: "{{ item }}"
         state: started
@@ -71,7 +83,6 @@
         daemon_reload: yes
       loop:
         - postgresql
-        - cmdb-backend
         - nginx
 
   handlers:
