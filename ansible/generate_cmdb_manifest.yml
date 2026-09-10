@@ -1,1 +1,16 @@
+---
+- name: Discover Host Facts and Generate Likpi CMDB Manifest
+  hosts: cmdb_servers
+  gather_facts: yes
+  tasks:
+    - name: Ensure target directory exists
+      file:
+        path: /opt/likpi/gitops
+        state: directory
+        mode: '0755'
 
+    - name: Render schema-compliant likpi.yaml
+      template:
+        src: templates/likpi.yaml.j2
+        dest: /opt/likpi/gitops/likpi.yaml
+        mode: '0644'
