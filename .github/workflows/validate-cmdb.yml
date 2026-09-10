@@ -1,1 +1,88 @@
+name: Validate CMDB YAML
 
+on:
+  pull_request:
+    branches: [ "main", "master" ]
+    paths:
+      - '**/likpi.yaml'
+      - '.github/workflows/validate-cmdb.yml'
+
+jobs:
+  validate-likpi-yaml:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Validation Dependencies
+        run: npm install ajv ajv-formats js-yaml
+
+      - name: Validate Multi-Document YAML Against Likpi Gatekeeper
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const yaml = require('js-yaml');
+            const Ajv = require('ajv');
+            const addFormats = require('ajv-formats');
+
+            // 1. Fetch live Schema from Likpi CMDB
+            // Use GitHub Repository Secrets or environment variable in production
+            const cmdbUrl = process.env.LIKPI_CMDB_URL || 'https://cmdb.yourdomain.com';
+            
+            let schema;
+            try {
+              const response = await fetch(`${cmdbUrl}/api/v1/schema/json-schema`);
+              if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+              }
+              schema = await response.json();
+            } catch (err) {
+              console.error(`❌ Failed to fetch live schema from CMDB: ${err.message}`);
+              process.exit(1);
+            }
+
+            // 2. Initialize AJV with standard draft-07 formats
+            const ajv = new Ajv({ strict: false });
+            addFormats(ajv);
+            const validate = ajv.compile(schema);
+
+            // 3. Locate and parse the likpi.yaml manifest
+            const manifestPath = 'likpi.yaml';
+            if (!fs.existsSync(manifestPath)) {
+              console.error(`❌ Manifest file '${manifestPath}' not found in repo root.`);
+              process.exit(1);
+            }
+
+            const rawContent = fs.readFileSync(manifestPath, 'utf8');
+            const docs = yaml.loadAll(rawContent);
+            let hasFailure = false;
+
+            // 4. Validate each CI document individually
+            console.log(`🔍 Validating ${docs.length} configuration document(s)...`);
+            docs.forEach((doc, idx) => {
+              if (!doc) return;
+              const docName = doc?.metadata?.name || `Doc #${idx + 1}`;
+              const isValid = validate(doc);
+
+              if (!isValid) {
+                console.error(`\n❌ Validation FAILED for [${docName}] (${doc?.kind || 'Unknown'}):`);
+                console.error(JSON.stringify(validate.errors, null, 2));
+                hasFailure = true;
+              } else {
+                console.log(`✅ Passed: [${docName}] (${doc.kind})`);
+              }
+            });
+
+            // 5. Block the Pull Request if any document fails
+            if (hasFailure) {
+              console.error('\n💥 One or more CIs violated schema constraints. Pull request blocked.');
+              process.exit(1);
+            } else {
+              console.log('\n🚀 All Configuration Items are 100% compliant with Likpi CMDB schema.');
+            }
