@@ -2,15 +2,22 @@
 - name: Discover Host Facts and Generate Likpi CMDB Manifest
   hosts: cmdb_servers
   gather_facts: yes
+  vars:
+    target_environment: "PROD"
+    app_name: "app-billing-backend"
+    app_id: "APP-BILLING-01"
+    target_db_name: "db-postgres-prod"
+    output_dir: "/opt/likpi/gitops"
+
   tasks:
-    - name: Ensure target directory exists
+    - name: Ensure target manifest output directory exists
       file:
-        path: /opt/likpi/gitops
+        path: "{{ output_dir }}"
         state: directory
         mode: '0755'
 
-    - name: Render schema-compliant likpi.yaml
+    - name: Render schema-compliant likpi.yaml with relations
       template:
         src: templates/likpi.yaml.j2
-        dest: /opt/likpi/gitops/likpi.yaml
+        dest: "{{ output_dir }}/likpi.yaml"
         mode: '0644'
