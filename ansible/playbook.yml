@@ -1,1 +1,81 @@
+---
+- name: Deploy Likpi CMDB Enterprise
+  hosts: cmdb_servers
+  become: yes
+  vars:
+    likpi_user: likpiadm
+    likpi_group: likpi
+    install_dir: /opt/likpi
 
+  tasks:
+    - name: Install system dependencies (Java 17, Nginx, PostgreSQL, unzip)
+      apt:
+        name:
+          - openjdk-17-jre-headless
+          - nginx
+          - postgresql-15
+          - unzip
+        state: present
+        update_cache: yes
+
+    - name: Create Likpi group and user
+      group:
+        name: "{{ likpi_group }}"
+        state: present
+    - user:
+        name: "{{ likpi_user }}"
+        group: "{{ likpi_group }}"
+        home: /home/{{ likpi_user }}
+        shell: /bin/bash
+        state: present
+
+    - name: Create isolated application directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ likpi_user }}"
+        group: "{{ likpi_group }}"
+        mode: '0755'
+      loop:
+        - "{{ install_dir }}/cmdb-backend"
+        - "{{ install_dir }}/cmdb-frontend/html"
+        - "{{ install_dir }}/security"
+
+    - name: Register Likpi Backend as a systemd service
+      copy:
+        dest: /etc/systemd/system/cmdb-backend.service
+        content: |
+          [Unit]
+          Description=Likpi CMDB Backend Service
+          After=network.target postgresql.service
+
+          [Service]
+          Type=simple
+          User={{ likpi_user }}
+          Group={{ likpi_group }}
+          WorkingDirectory={{ install_dir }}/cmdb-backend
+          ExecStart=/usr/bin/java -jar {{ install_dir }}/cmdb-backend/cmdb-app-latest-fat.jar -conf {{ install_dir }}/cmdb-backend/config.json
+          Restart=on-failure
+          RestartSec=10
+          SyslogIdentifier=cmdb-backend
+
+          [Install]
+          WantedBy=multi-user.target
+      notify: Restart Likpi Backend
+
+    - name: Ensure services are enabled and started
+      systemd:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+        daemon_reload: yes
+      loop:
+        - postgresql
+        - cmdb-backend
+        - nginx
+
+  handlers:
+    - name: Restart Likpi Backend
+      systemd:
+        name: cmdb-backend
+        state: restarted
