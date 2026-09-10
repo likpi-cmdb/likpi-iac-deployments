@@ -1,18 +1,45 @@
+---
 apiVersion: likpi/v1
 kind: COMPUTERSYSTEM
 metadata:
-  name: "${instance_name}"
+  name: "${vm_name}"
 spec:
   class: "COMPUTERSYSTEM"
   status: "operational"
   attributes:
-    description: "${description}"
+    description: "Underlying virtual machine host"
     environment: "${environment}"
     ip_address: "${ip_address}"
-    unique_identifier: "${unique_identifier}"
-    serial_number: "${serial_number}"
+    unique_identifier: "${vm_id}"
+    serial_number: "AWS-${vm_id}"
     cpu_count: "${cpu_count}"
     category: "Hardware"
     type: "VMNaked"
     item: "N/A"
     model: "Proliant DL380 Gen11"
+
+---
+apiVersion: likpi/v1
+kind: APPLICATION
+metadata:
+  name: "${app_name}"
+spec:
+  class: "APPLICATION"
+  status: "operational"
+  attributes:
+    description: "Core Backend API Service"
+    environment: "${environment}"
+    unique_identifier: "${app_id}"
+    category: "Software"
+    type: "Software Application System"
+    item: "Application Server Software Platforms"
+    model: "N/A"
+  relations:
+    - target: "${vm_name}"
+      target_class: "COMPUTERSYSTEM"
+      relation_class: "RUNS_ON"
+      impact: "Yes"
+    - target: "${db_cluster_name}"
+      target_class: "DATABASE"
+      relation_class: "DEPENDENCY"
+      impact: "Yes"
