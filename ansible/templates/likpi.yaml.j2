@@ -7,9 +7,9 @@ spec:
   class: "COMPUTERSYSTEM"
   status: "operational"
   attributes:
-    description: "Bare-metal / VM host discovered by Ansible"
+    description: "Host discovered and configured by Ansible"
     ip_address: "{{ ansible_default_ipv4.address | default('127.0.0.1') }}"
-    environment: "PROD"
+    environment: "{{ target_environment | default('PROD') }}"
     unique_identifier: "{{ ansible_product_serial | default(ansible_machine_id) }}"
     serial_number: "{{ ansible_product_serial | default('UNKNOWN-SERIAL') }}"
     cpu_count: "{{ ansible_processor_vcpus | string }}"
@@ -22,14 +22,14 @@ spec:
 apiVersion: likpi/v1
 kind: APPLICATION
 metadata:
-  name: "{{ app_name }}"
+  name: "{{ app_name | default('app-billing-backend') }}"
 spec:
   class: "APPLICATION"
   status: "operational"
   attributes:
-    description: "Application managed by Ansible"
-    environment: "PROD"
-    unique_identifier: "{{ app_id }}"
+    description: "Application deployed by Ansible"
+    environment: "{{ target_environment | default('PROD') }}"
+    unique_identifier: "{{ app_id | default('APP-BILLING-EU-01') }}"
     category: "Software"
     type: "Software Application System"
     item: "Application Server Software Platforms"
