@@ -1,1 +1,10 @@
+replicaCount: 3
 
+images:
+  backend: "likpi/cmdb-backend:latest"
+  frontend: "likpi/cmdb-frontend:latest"
+
+database:
+  user: "cmdb_user"
+  password: "db_password"
+  storage: "10Gi"
