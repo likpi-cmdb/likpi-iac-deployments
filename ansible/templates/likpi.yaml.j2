@@ -1,1 +1,19 @@
-
+---
+apiVersion: likpi/v1
+kind: COMPUTERSYSTEM
+metadata:
+  name: "{{ ansible_hostname }}"
+spec:
+  class: COMPUTERSYSTEM
+  status: operational
+  attributes:
+    description: "Linux Server deployed by Ansible"
+    ip_address: "{{ ansible_default_ipv4.address | default('127.0.0.1') }}"
+    environment: "PROD"
+    unique_identifier: "{{ ansible_product_serial | default(ansible_machine_id) }}"
+    serial_number: "{{ ansible_product_serial | default('UNKNOWN-SERIAL') }}"
+    cpu_count: "{{ ansible_processor_vcpus | string }}"
+    category: "Hardware"
+    type: "VMNaked"
+    item: "N/A"
+    model: "Proliant DL380 Gen11"
