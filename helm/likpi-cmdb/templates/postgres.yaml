@@ -1,1 +1,47 @@
-
+apiVersion: v1
+kind: Service
+metadata:
+  name: cmdb-postgres-service
+spec:
+  clusterIP: None
+  ports:
+    - port: 5432
+  selector:
+    app: cmdb-postgres
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: cmdb-postgres
+spec:
+  serviceName: "cmdb-postgres-service"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cmdb-postgres
+  template:
+    metadata:
+      labels:
+        app: cmdb-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15
+          env:
+            - name: POSTGRES_DB
+              value: "cmdb"
+            - name: POSTGRES_USER
+              value: "{{ .Values.database.user }}"
+            - name: POSTGRES_PASSWORD
+              value: "{{ .Values.database.password }}"
+          volumeMounts:
+            - name: pgdata
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: pgdata
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.database.storage }}
