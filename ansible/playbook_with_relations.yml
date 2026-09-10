@@ -1,1 +1,21 @@
+---
+- name: Deploy App and Generate Relational CMDB Manifest
+  hosts: cmdb_servers
+  gather_facts: yes
+  vars:
+    app_name: "app-billing-backend"
+    app_id: "APP-BILLING-01"
+    target_db_name: "db-postgres-prod"
 
+  tasks:
+    - name: Ensure target manifest directory exists
+      file:
+        path: /opt/likpi/gitops
+        state: directory
+        mode: '0755'
+
+    - name: Generate schema-compliant relational likpi.yaml
+      template:
+        src: templates/likpi.yaml.j2
+        dest: /opt/likpi/gitops/likpi.yaml
+        mode: '0644'
