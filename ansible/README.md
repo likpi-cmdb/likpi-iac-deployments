@@ -11,7 +11,7 @@ Following the official Likpi Operations Runbook, this automation script executes
 
 ## Usage Instructions
 1. Ensure your target servers are defined in your Ansible `hosts` inventory under the `[cmdb_servers]` group.
-2. Place your Likpi CMDB fat JAR and Frontend ZIP into the `files/` directory (create this directory if it doesn't exist).
-3. Run the playbook:
+2. The playbook will automatically download the latest Likpi binaries directly from the official GitHub releases. No manual file placement is required.
+3. Run the deployment playbook:
    ```bash
    ansible-playbook -i hosts playbook.yml
