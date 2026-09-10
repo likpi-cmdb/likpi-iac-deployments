@@ -6,5 +6,6 @@ images:
 
 database:
   user: "cmdb_user"
-  password: "db_password"
+  # password: "" # SECURITY RULE: Do not set passwords in values.yaml. 
+  # You MUST pass this during installation via: --set database.password=YOUR_SECURE_PASSWORD
   storage: "10Gi"
