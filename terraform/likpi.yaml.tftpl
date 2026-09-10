@@ -7,16 +7,16 @@ spec:
   class: "COMPUTERSYSTEM"
   status: "operational"
   attributes:
-    description: "Underlying virtual machine host"
+    description: "Cloud virtual machine host deployed by Terraform"
     environment: "${environment}"
     ip_address: "${ip_address}"
     unique_identifier: "${vm_id}"
     serial_number: "AWS-${vm_id}"
     cpu_count: "${cpu_count}"
-    category: "Hardware"
-    type: "VMNaked"
-    item: "N/A"
-    model: "Proliant DL380 Gen11"
+    category: "Server"
+    type: "Container"
+    item: ""
+    model: "AWS"
 
 ---
 apiVersion: likpi/v1
