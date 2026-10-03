@@ -22,47 +22,30 @@ It uses
 1. Install Podman Desktop
 2. Install Likpi CMDB https://www.likpi.com : frontend / backend / db postgresql
 3. Install ./sim-cloud-floci-podman/floci-podman.sh
- 3.1 chmod u+x ./install_floci_podman.zsh
+* 3.1 chmod u+x ./install_floci_podman.zsh
+* 3.2 Launch Podman: podman machine start
+* 3.3 Launch Floci: cd ./sim-cloud-floci-podman/floci-podman-0.1.1/bin && ./floci-podman up aws
 
-4. Install Terraform 
-5. Configure Terraform
+Expected result:
+* AWS — floci on port 4566 - http://localhost:4566/
 
-podman machine start
-bin % ./floci-podman up aws
+4. Install Terraform
 
-AWS — floci on port 4566 - http://localhost:4566/
- export AWS_ENDPOINT_URL=http://localhost:4566
-  export AWS_ACCESS_KEY_ID=test
-  export AWS_SECRET_ACCESS_KEY=test
-  export AWS_DEFAULT_REGION=us-east-1
-
-http://localhost:4566/_floci/ui Floci UI unavailable
-
-Could not start the Floci web console: 
-Floci could not reach the container runtime (java.net.BindException: Permission denied). 
-Check that the Docker/Podman socket is mounted into the Floci container and accessible — 
-on SELinux hosts the socket bind-mount may need relabeling (e.g. ':z') 
-or '--security-opt label=disable'.
-
-/etc/floci/init/
-
-https://floci.io/floci/services/config/
-export AWS_ENDPOINT_URL=http://localhost:4566
-export AWS_DEFAULT_REGION=us-east-1
-export AWS_ACCESS_KEY_ID=test
-export AWS_SECRET_ACCESS_KEY=test
-
-cd ../../../terraform
-chmod u+x 0_start.sh
-./0_start_tf_pipeline.sh
-
+on macos:
 brew tap hashicorp/tap
 brew install hashicorp/tap/terraform
 terraform -version
 
+5. Test the Terraform IaC pipeline with bash script
+
+```bash
+cd ../../../0_start_tf_pipeline.sh
+chmod u+x 0_start.sh
+./0_start_tf_pipeline.sh
+```
 
 ## Open source projects used
 * IBM/Red Hat - Podman Desktop
 * Floci
- * https://github.com/DawidAdamski/floci-podman/
+ * + https://github.com/DawidAdamski/floci-podman/
 * IBM Terraform
