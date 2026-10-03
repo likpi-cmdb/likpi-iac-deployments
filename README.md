@@ -1,7 +1,9 @@
 # Likpi CMDB - Enterprise IaC Deployments
 
+![Demo](./doc/images/likpi-cmdb-demonstrator-terraform-iac-podman-demo.svg)
+
 Welcome to the Infrastructure as Code (IaC) deployment repository for the Likpi CMDB demonstrator. 
-This repository provides a local first demo automation modules to test Likpi.
+This repository provides a **local first demo** automation modules to test Likpi.
 
 It uses
 - Podman via Podman desktop,
@@ -15,28 +17,29 @@ It uses
 * **/.github/workflows:** GitHub Actions pipelines for strict Pre-Merge YAML validation against the Likpi Gatekeeper schema.
 * **/ansible:** Playbooks for Day 1 bare-metal/VM provisioning, including Java 17, Nginx, and systemd service registration.
 * **/helm:** Kubernetes charts to orchestrate Likpi across Docker containers with StatefulSets for PostgreSQL.
-* **/sim-cloud-floci-podman:** Local Cloud simulator
+* **/sim-cloud-floci-podman:** Local Cloud simulator based on Floci with floci-podman integration
 * **/terraform:** AWS/Azure modules to provision cloud infrastructure and dynamically template GitOps-compliant `likpi.yaml` manifests.
 
 ## Quick Start
-1. Install Podman Desktop
+1. Install Podman Desktop - https://podman-desktop.io/
 2. Install Likpi CMDB https://www.likpi.com : frontend / backend / db postgresql
 3. Install ./sim-cloud-floci-podman/floci-podman.sh
 * 3.1 chmod u+x ./install_floci_podman.zsh
-* 3.2 Launch Podman: podman machine start
+* 3.2 Launch Podman: 'podman machine start'
 * 3.3 Launch Floci: cd ./sim-cloud-floci-podman/floci-podman-0.1.1/bin && ./floci-podman up aws
 
-Expected result:
-* AWS — floci on port 4566 - http://localhost:4566/
+Expected result: AWS — floci on port 4566 - http://localhost:4566/
 
 4. Install Terraform
 
-on macos:
+On MacOs:
+```bash
 brew tap hashicorp/tap
 brew install hashicorp/tap/terraform
 terraform -version
+```
 
-5. Test the Terraform IaC pipeline with bash script
+5. Test the Terraform IaC pipeline with Bash script
 
 ```bash
 cd ../../../0_start_tf_pipeline.sh

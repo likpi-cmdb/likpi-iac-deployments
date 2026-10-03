@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1560" height="1020" viewBox="0 0 1560 1020" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#334155"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1560" height="1020" fill="#f8fafc"/>
+  <text x="780" y="46" text-anchor="middle" font-size="28" font-weight="bold" fill="#0f172a">Likpi CMDB Demonstrator — IaC with Terraform</text>
+  <text x="780" y="74" text-anchor="middle" font-size="15" fill="#475569">Local demo on Podman Desktop — AWS cloud simulated by Floci — provisioned and loaded by a Bash script driving Terraform</text>
+
+  <!-- ================= PROVISIONING ZONE ================= -->
+  <rect x="40" y="104" width="1480" height="252" rx="16" fill="#eef2ff" stroke="#a5b4fc" stroke-width="1.5"/>
+  <text x="64" y="134" font-size="17" font-weight="bold" fill="#4338ca">Provisioning — Bash + Terraform (one-time setup)</text>
+
+  <!-- Bash script -->
+  <rect x="72" y="156" width="200" height="96" rx="12" fill="#ffffff" stroke="#6366f1" stroke-width="2"/>
+  <text x="172" y="190" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e1b4b">Bash script</text>
+  <text x="172" y="210" text-anchor="middle" font-size="11" fill="#4b5563">run.sh — orchestrates the demo</text>
+  <text x="172" y="228" text-anchor="middle" font-size="11" fill="#4b5563">terraform steps + CMDB load</text>
+
+  <!-- Bash -> Terraform -->
+  <path d="M 272 204 L 328 204" stroke="#334155" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <text x="300" y="196" text-anchor="middle" font-size="11" fill="#4338ca">runs</text>
+
+  <!-- Terraform -->
+  <rect x="330" y="150" width="290" height="140" rx="12" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
+  <text x="475" y="182" text-anchor="middle" font-size="18" font-weight="bold" fill="#4c1d95">Terraform (IaC)</text>
+  <text x="475" y="202" text-anchor="middle" font-size="12" fill="#6d28d9">infrastructure as code</text>
+  <rect x="346" y="214" width="76" height="26" rx="13" fill="#ede9fe" stroke="#7c3aed" stroke-width="1"/>
+  <text x="384" y="231" text-anchor="middle" font-size="12" font-weight="bold" fill="#5b21b6">1. init</text>
+  <rect x="432" y="214" width="76" height="26" rx="13" fill="#ede9fe" stroke="#7c3aed" stroke-width="1"/>
+  <text x="470" y="231" text-anchor="middle" font-size="12" font-weight="bold" fill="#5b21b6">2. plan</text>
+  <rect x="518" y="214" width="84" height="26" rx="13" fill="#ede9fe" stroke="#7c3aed" stroke-width="1"/>
+  <text x="560" y="231" text-anchor="middle" font-size="12" font-weight="bold" fill="#5b21b6">3. apply</text>
+
+  <!-- Template file likpi.yaml.tfpl -->
+  <rect x="766" y="156" width="280" height="64" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+  <path d="M 782 166 v30 h24 v-22 l-8-8 h-16 z" fill="#fef3c7" stroke="#d97706" stroke-width="1"/>
+  <text x="818" y="180" font-size="15" font-weight="bold" font-family="Consolas, Menlo, monospace" fill="#78350f">likpi.yaml.tfpl</text>
+  <text x="818" y="200" font-size="11" fill="#92400e">CMDB load template — payload definition</text>
+
+  <!-- Rendered payload likpi.yaml -->
+  <rect x="766" y="244" width="280" height="64" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+  <path d="M 782 254 v30 h24 v-22 l-8-8 h-16 z" fill="#fef3c7" stroke="#d97706" stroke-width="1"/>
+  <text x="818" y="268" font-size="15" font-weight="bold" font-family="Consolas, Menlo, monospace" fill="#78350f">likpi.yaml</text>
+  <text x="818" y="288" font-size="11" fill="#92400e">rendered CMDB payload — terraform local_file</text>
+
+  <!-- Terraform reads template -->
+  <path d="M 620 188 L 766 188" stroke="#334155" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <text x="693" y="180" text-anchor="middle" font-size="11" fill="#92400e">reads / updates</text>
+
+  <!-- Terraform local_file -> rendered payload -->
+  <path d="M 620 262 L 700 262 L 700 276 L 766 276" stroke="#334155" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <text x="686" y="254" text-anchor="middle" font-size="11" fill="#92400e">3. local_file</text>
+
+  <!-- template renders to payload -->
+  <path d="M 906 220 L 906 244" stroke="#334155" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <text x="916" y="237" font-size="11" fill="#92400e">renders</text>
+
+  <!-- Terraform apply -> Floci (AWS simulator) -->
+  <path d="M 475 150 L 475 128 L 1360 128 L 1360 538" stroke="#334155" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <text x="940" y="122" text-anchor="middle" font-size="11" fill="#7f1d1d">3. apply — provision AWS-simulated stack (Floci)</text>
+
+  <!-- Terraform apply -> Pod (containers) -->
+  <path d="M 475 290 L 475 476" stroke="#334155" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <text x="487" y="402" font-size="12" font-weight="bold" fill="#4338ca">3. apply — provision</text>
+  <text x="487" y="418" font-size="12" font-weight="bold" fill="#4338ca">CMDB containers (pod)</text>
+
+  <!-- ================= RUNTIME ZONE ================= -->
+  <rect x="40" y="430" width="1480" height="550" rx="16" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+  <text x="64" y="462" font-size="17" font-weight="bold" fill="#1d4ed8">Local workstation — Podman Desktop</text>
+
+  <!-- Pod -->
+  <rect x="260" y="478" width="940" height="250" rx="16" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="284" y="508" font-size="15" font-weight="bold" fill="#15803d">Pod — likpi-cmdb (CMDB Demonstrator)</text>
+
+  <!-- User -->
+  <rect x="72" y="560" width="140" height="90" rx="12" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+  <text x="142" y="600" text-anchor="middle" font-size="15" font-weight="bold" fill="#7c2d12">User</text>
+  <text x="142" y="620" text-anchor="middle" font-size="11" fill="#9a3412">web browser</text>
+  <path d="M 212 605 L 298 605" stroke="#334155" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <text x="255" y="597" text-anchor="middle" font-size="11" fill="#334155">HTTP</text>
+
+  <!-- Frontend -->
+  <rect x="300" y="540" width="220" height="130" rx="12" fill="#ffffff" stroke="#0ea5e9" stroke-width="2"/>
+  <text x="410" y="578" text-anchor="middle" font-size="17" font-weight="bold" fill="#075985">Frontend — JavaScript</text>
+  <text x="410" y="600" text-anchor="middle" font-size="12" fill="#475569">CMDB web UI</text>
+  <text x="410" y="618" text-anchor="middle" font-size="12" fill="#475569">static assets (Podman)</text>
+
+  <!-- Backend -->
+  <rect x="600" y="540" width="220" height="130" rx="12" fill="#ffffff" stroke="#f97316" stroke-width="2"/>
+  <text x="710" y="578" text-anchor="middle" font-size="17" font-weight="bold" fill="#7c2d12">Backend — Java</text>
+  <text x="710" y="600" text-anchor="middle" font-size="12" fill="#475569">CMDB REST API</text>
+  <text x="710" y="618" text-anchor="middle" font-size="12" fill="#475569">HTTP / JSON</text>
+
+  <!-- PostgreSQL -->
+  <rect x="900" y="540" width="240" height="130" rx="12" fill="#ffffff" stroke="#336191" stroke-width="2"/>
+  <text x="1020" y="578" text-anchor="middle" font-size="17" font-weight="bold" fill="#263445">PostgreSQL</text>
+  <text x="1020" y="600" text-anchor="middle" font-size="12" fill="#475569">CMDB database</text>
+  <text x="1020" y="618" text-anchor="middle" font-size="12" fill="#475569">persistent volume</text>
+
+  <!-- Floci -->
+  <rect x="1240" y="540" width="240" height="130" rx="12" fill="#ffffff" stroke="#ef4444" stroke-width="2"/>
+  <text x="1360" y="578" text-anchor="middle" font-size="17" font-weight="bold" fill="#7f1d1d">Floci</text>
+  <text x="1360" y="600" text-anchor="middle" font-size="12" fill="#b91c1c">AWS cloud simulator</text>
+  <text x="1360" y="618" text-anchor="middle" font-size="12" fill="#b91c1c">runs as a Podman container</text>
+
+  <!-- Frontend -> Backend -->
+  <path d="M 520 605 L 598 605" stroke="#334155" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <text x="559" y="597" text-anchor="middle" font-size="11" fill="#334155">REST</text>
+
+  <!-- Backend -> PostgreSQL -->
+  <path d="M 820 605 L 898 605" stroke="#334155" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <text x="859" y="597" text-anchor="middle" font-size="11" fill="#334155">SQL</text>
+
+  <!-- CMDB load: payload -> Backend -->
+  <path d="M 906 308 L 906 468 L 710 468 L 710 538" stroke="#334155" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <text x="916" y="372" font-size="12" font-weight="bold" fill="#92400e">4. CMDB load</text>
+  <text x="916" y="388" font-size="12" font-weight="bold" fill="#92400e">HTTP REST call + payload</text>
+
+  <!-- Legend -->
+  <text x="780" y="950" text-anchor="middle" font-size="13" fill="#334155">Flow: 1. terraform init → 2. plan → 3. apply (provisions pod, Floci, likpi.yaml via local_file) → 4. CMDB load (HTTP REST with payload) → 5. browse and query the CMDB</text>
+</svg>
