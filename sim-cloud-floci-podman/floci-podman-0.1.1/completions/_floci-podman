@@ -1,0 +1,34 @@
+#compdef floci-podman
+# zsh completion for floci-podman
+
+_floci_podman() {
+  local -a commands clouds
+  commands=(
+    'up:start emulators and print connection details'
+    'down:stop and remove emulator containers'
+    'check:verify containers, socket and storage round-trip'
+    'info:print connection details'
+    'help:show help'
+    'version:show version'
+  )
+  clouds=(aws az gcp oci)
+
+  if (( CURRENT == 2 )); then
+    _describe -t commands 'floci-podman command' commands
+    return
+  fi
+
+  case "$words[2]" in
+    up|check)
+      _values 'cloud' $clouds
+      ;;
+    down)
+      _arguments '--purge[also remove the floci-net network]' '*:cloud:(aws az gcp oci)'
+      ;;
+    info)
+      _arguments '--export[print bare export lines]' '*:cloud:(aws az gcp oci)'
+      ;;
+  esac
+}
+
+_floci_podman "$@"

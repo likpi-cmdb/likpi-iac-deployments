@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+# floci-podman — run Floci cloud emulators on Podman.
+# https://github.com/__GH_USER__/floci-podman
+#
+# Unofficial. Not affiliated with the Floci project.
+
+set -uo pipefail
+
+FLOCI_PODMAN_VERSION="0.1.0"
+
+# Resolve our own location through any symlinks (Homebrew installs bin/ as a symlink).
+_resolve_dir() {
+  local src="$1" dir
+  while [ -L "$src" ]; do
+    dir=$(cd -P "$(dirname "$src")" >/dev/null 2>&1 && pwd)
+    src=$(readlink "$src")
+    case "$src" in
+      /*) ;;
+      *) src="$dir/$src" ;;
+    esac
+  done
+  cd -P "$(dirname "$src")" >/dev/null 2>&1 && pwd
+}
+
+BIN_DIR=$(_resolve_dir "${BASH_SOURCE[0]}")
+ROOT=$(cd "$BIN_DIR/.." >/dev/null 2>&1 && pwd)
+FLOCI_LIB_DIR="$ROOT/lib"
+FLOCI_LIBEXEC_DIR="$ROOT/libexec"
+
+if [ ! -f "$FLOCI_LIB_DIR/floci-lib.sh" ]; then
+  printf 'floci-podman: cannot find lib/floci-lib.sh (looked in %s)\n' "$FLOCI_LIB_DIR" >&2
+  exit 1
+fi
+
+# shellcheck source=lib/floci-lib.sh
+. "$FLOCI_LIB_DIR/floci-lib.sh"
+
+usage() {
+  cat <<USAGE
+${C_B}floci-podman${C_0} ${FLOCI_PODMAN_VERSION} — run Floci cloud emulators on Podman
+
+${C_B}USAGE${C_0}
+  floci-podman <command> [cloud ...] [options]
+
+${C_B}COMMANDS${C_0}
+  up       start emulators and print connection details
+  down     stop and remove emulator containers
+  check    verify containers, socket and storage round-trip
+  info     print connection details without restarting anything
+
+${C_B}CLOUDS${C_0}  (omit to act on all four)
+  aws    port 4566    container floci
+  az     port 4577    container floci-az
+  gcp    port 4588    container floci-gcp
+  oci    port 4599    container floci-oci
+
+${C_B}EXAMPLES${C_0}
+  floci-podman up                        # all four
+  floci-podman up aws gcp                # just these two
+  floci-podman check az                  # smoke-test Azure only
+  eval "\$(floci-podman info aws --export)"
+  floci-podman down --purge              # also remove the floci-net network
+
+${C_B}ENVIRONMENT${C_0}
+  FLOCI_PODMAN_SOCK   podman socket path *inside the VM*
+                      (default: detected via 'podman machine ssh id -u')
+  FLOCI_NETWORK       podman network name (default: floci-net)
+  FLOCI_AWS_REGION    region reported in connection details (default: us-east-1)
+  NO_COLOR            disable colored output
+
+Run 'floci-podman <command> --help' for command-specific help.
+USAGE
+}
+
+cmd="${1:-}"
+[ "$#" -gt 0 ] && shift
+
+case "$cmd" in
+  ""|-h|--help|help)
+    usage
+    exit 0
+    ;;
+  -V|--version|version)
+    printf 'floci-podman %s\n' "$FLOCI_PODMAN_VERSION"
+    exit 0
+    ;;
+  up|down|check|info)
+    if [ ! -f "$FLOCI_LIBEXEC_DIR/${cmd}.sh" ]; then
+      printf 'floci-podman: missing subcommand file for %s\n' "$cmd" >&2
+      exit 1
+    fi
+    # shellcheck disable=SC1090
+    . "$FLOCI_LIBEXEC_DIR/${cmd}.sh"
+    ;;
+  *)
+    printf 'floci-podman: unknown command %s\n\n' "$cmd" >&2
+    usage >&2
+    exit 2
+    ;;
+esac

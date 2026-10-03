@@ -1,0 +1,37 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+
+      - name: Syntax check
+        run: |
+          bash -n bin/floci-podman
+          for f in lib/*.sh libexec/*.sh; do bash -n "$f"; done
+
+      - name: shellcheck
+        run: shellcheck -x -S warning bin/floci-podman lib/*.sh libexec/*.sh
+
+      - name: Smoke — help and info work without podman
+        run: |
+          NO_COLOR=1 ./bin/floci-podman --version
+          NO_COLOR=1 ./bin/floci-podman --help > /dev/null
+          NO_COLOR=1 ./bin/floci-podman up --help > /dev/null
+          NO_COLOR=1 ./bin/floci-podman info aws --export | grep -q AWS_ENDPOINT_URL
+          NO_COLOR=1 ./bin/floci-podman info --export | grep -q STORAGE_EMULATOR_HOST
+
+      - name: Unknown cloud is an error, not a silent skip
+        run: |
+          if NO_COLOR=1 ./bin/floci-podman info nonsense >/dev/null 2>&1; then
+            echo "expected a non-zero exit"; exit 1
+          fi

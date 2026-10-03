@@ -1,0 +1,10 @@
+.DS_Store
+*.swp
+/dist/
+/bin/
+#/sim-cloud-floci-podman/floci-podman/
+#/sim-cloud-floci-podman/floci-podman-*/
+#/sim-cloud-floci-podman/floci-podman-0.1.1/
+#/sim-cloud-floci-podman/floci-podman-0.1.1.tar.gz
+#/sim-cloud-floci-podman/.cache/
+EVAL_NOTES.md
