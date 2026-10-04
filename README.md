@@ -23,8 +23,9 @@ It uses
 ## Quick Start
 1. Install Podman Desktop - https://podman-desktop.io/
 2. Download and install Likpi CMDB https://www.likpi.com : Frontend / Backend / Database PostgreSQL with Docker compose script in Podman
-2.1 http://localhost:9096/
-2.2 ttp://localhost:9096/api/v1/schema/json-schema
+* 2.1 http://localhost:9096/
+* 2.2 http://localhost:9096/api/v1/schema/json-schema
+
 3. Install ./sim-cloud-floci-podman/floci-podman.sh
 * 3.1 Launch Podman: 'podman machine start'
 * 3.2 Install Floci via floci-podman: 'chmod u+x ./install_floci_podman.zsh'
@@ -109,7 +110,7 @@ podman logs --tail=100 floci
 
 ## Network allowlist
 ### Installations
-* www.lik* Python pi.com
+* www.likpi.com
 * doc.likpi.com
 * fonts.gstatic.com - Google
 * n8n.webessentiel.fr - Likpi download
