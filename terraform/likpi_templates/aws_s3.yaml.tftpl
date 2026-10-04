@@ -1,0 +1,17 @@
+---
+apiVersion: likpi/v1
+kind: StoragePool
+metadata:
+  name: "${s3_name}"
+spec:
+  class: "StoragePool"
+  status: "operational"
+  attributes:
+    description: "S3 Storage deployed by Terraform"
+    environment: "${environment}"
+    unique_identifier: "${s3_id}"
+    data_model_ref: "aaa"
+    category: "Storage"
+    type: "ObjectStorage"
+    item: "S3 Bucket"
+    model: "AWS"

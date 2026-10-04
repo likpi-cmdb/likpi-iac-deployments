@@ -21,3 +21,11 @@ variable "db_cluster_name" {
   description = "Target Database CI name"
   default     = "db-postgres-prod"
 }
+
+variable "tags" {
+  type        = map(string)
+  description = "Cloud tags"
+  default = {
+   Environment = "production"
+ }
+}

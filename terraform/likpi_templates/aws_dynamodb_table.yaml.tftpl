@@ -1,0 +1,16 @@
+---
+apiVersion: likpi/v1
+kind: COMPUTERSYSTEM
+metadata:
+  name: "${dynamodb_table_name}"
+spec:
+  class: "COMPUTERSYSTEM"
+  status: "operational"
+  attributes:
+    description: "Cloud virtual machine host deployed by Terraform"
+    environment: "${environment}"
+    unique_identifier: "${dynamodb_table_id}"
+    category: "Server"
+    type: "Container"
+    item: ""
+    model: "AWS"

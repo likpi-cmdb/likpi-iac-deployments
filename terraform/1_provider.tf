@@ -27,4 +27,10 @@ provider "aws" {
     sqs            = "http://localhost:4566"
     ssm            = "http://localhost:4566"
   }
+
+   default_tags {
+    tags = {
+      Environment = "prod"
+    }
+  }
 }
